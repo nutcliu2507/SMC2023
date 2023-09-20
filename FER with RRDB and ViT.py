@@ -62,7 +62,7 @@ def define_model(input_shape=(100, 100, 1), classes=7):
     x = Multiply()([FAM, FCM])
     x = GlobalAveragePooling2D()(x)
     x = Dense(128, activation='relu')(x)
-    GAM = Dense(7, activation='relu')(x)
+    x = Dense(7, activation='softmax')(x)
 
     # Residual in Residual Dense Block
     RRDBlock = outLayer  # RRD_1
@@ -73,12 +73,9 @@ def define_model(input_shape=(100, 100, 1), classes=7):
 
     x = Add()([RRDBlock, RDBlock])  # RRD_1
     x = vision_transformer_block(x)
-    # x = GlobalAveragePooling2D()(x)
     x = Dense(128, activation='relu')(x)
-    LAM = Dense(7, activation='relu')(x)
-    x = Multiply()([LAM, GAM])
-    x = Dense(7, activation='softmax')(x)
-    return Model(inputs=inputLayer, outputs=x)
+    y = Dense(7, activation='softmax')(x)
+    return Model(inputs=inputLayer, outputs=x, y)
 
 
 # 主程式
